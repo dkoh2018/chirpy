@@ -7,10 +7,15 @@ import (
 
 func main() {
 	port := "8080"
-	filepathRoot := "./"
-	
+	filepathRoot := "./assets"
+
 	serveMux := http.NewServeMux()
-	serveMux.Handle("/", http.FileServer(http.Dir(filepathRoot)))
+
+	// serving static files from /assets/
+	serveMux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(filepathRoot))))
+
+	// serve the index.html at the root url
+	serveMux.Handle("/", http.FileServer(http.Dir(".")))
 
 	server := &http.Server{
 		Addr:    ":" + port,
