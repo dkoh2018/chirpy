@@ -6,16 +6,17 @@ import (
 )
 
 func main() {
+	port := "8080"
+	filepathRoot := "./"
+	
 	serveMux := http.NewServeMux()
-	serveMux.Handle("/", http.FileServer(http.Dir("./")))
+	serveMux.Handle("/", http.FileServer(http.Dir(filepathRoot)))
 
 	server := &http.Server{
+		Addr:    ":" + port,
 		Handler: serveMux,
-		Addr:    ":8080",
 	}
 
-	log.Println("Starting server on", server.Addr)
-	if err := server.ListenAndServe(); err != nil {
-		log.Fatalf("Server failed to start: %v", err)
-	}
+	log.Printf("Serving files from %s on port: %s\n", filepathRoot, port)
+	log.Fatal(server.ListenAndServe())
 }
